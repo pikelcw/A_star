@@ -39,12 +39,15 @@ class Node():
         return self.f
     
     def updateCost(self,end):
-        self.g = self.parent.g + 1
-        self.h = ((self.position[0] - end.position[0]) ** 2) + ((self.position[1] - end.position[1]) ** 2)
+        self.g = self.parent.g + ((self.position[0]-self.parent.position[0])**2+(self.position[1]-self.parent.position[1])**2)**(1/2)
+        self.h = (((self.position[0] - end.position[0]) ** 2) + ((self.position[1] - end.position[1]) ** 2))**(1/2)
         self.f = self.g + self.h
 
     def __eq__(self,com):
         return self.position == com.position
+
+    def __repr__(self):
+        return f"Node at {self.position}, with g={self.g}, h={self.h}, f={self.f}."
 
 def astar(maze, start, end):
     h, w = maze.shape
@@ -56,13 +59,13 @@ def astar(maze, start, end):
     open_list.append(start)
 
     while(len(open_list) > 0 ):
-        print("While")
+        # print("While")
         open_list.sort(key = Node.returnCost)
-        for closed_node in closed_list:
-            print(closed_node.position)
+        # for closed_node in closed_list:
+        #     print(closed_node.position)
         current_node = open_list.pop(0)
         closed_list.append(current_node)
-        # print(current_node.position)
+        print(current_node)
         if current_node == end: # Find a path
             path = []
             while current_node is not None:
@@ -78,7 +81,7 @@ def astar(maze, start, end):
                 continue
 
             # If is wall, conitnue
-            if maze[child_position[0]][child_position[1]] == 1:
+            if maze[child_position[0],child_position[1]]== 1:
                 continue
             
             child_node = Node(child_position, current_node)
@@ -86,22 +89,25 @@ def astar(maze, start, end):
 
         for child in children:
             for closed in closed_list:
-                # print(child.position,closed.position)
+                # print(child,closed)
                 if child == closed:
-                    # print("closed")
-                    continue
+                    # print("child in closed list")
+                    break
+            else:
+                child.updateCost(end)
 
-            child.updateCost(end)
-
-            for open_node in open_list:
-                if child == open_node and child.g > open_node.g:
-                    continue
-            open_list.append(child)
+                for open_node in open_list:
+                    if child == open_node and child.g >= open_node.g:
+                        # print("Chile in open list")
+                        break
+                else:
+                    print("Add",child)
+                    open_list.append(child)
         # time.sleep(5)
     return None
 
 if __name__ == "__main__":
-    maze, start_pos, end_pos= readInMap("map1.csv")
+    maze, start_pos, end_pos= readInMap("map2.csv")
     start = Node(start_pos)
     end = Node(end_pos)
     path = astar(maze,start,end)
