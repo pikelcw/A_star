@@ -75,5 +75,5 @@ if __name__ == "__main__":
     else:
         # Else, find a path, update maze and show.
         updateMaze(maze,path)
-        printMaze(maze)
+        # printMaze(maze)
         plotMaze(maze)

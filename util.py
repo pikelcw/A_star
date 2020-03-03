@@ -31,7 +31,19 @@ def updateMaze(maze,path):
         maze[y,x] = 9
 
 def plotMaze(maze):
-    plt.imshow(maze)
+    image = np.ones((maze.shape[0],maze.shape[1],3))
+    for j,row in enumerate(maze):
+        for i,element in enumerate(row):
+            if element == 1:
+                image[j,i,:] = np.array([0,0,0])
+            elif element == 2:
+                image[j,i,:] = np.array([1,0,0])
+            elif element == 3:
+                image[j,i,:] = np.array([0,1,0])
+            elif element == 9:
+                image[j,i,:] = np.array([0,0,1])
+
+    plt.imshow(image)
     plt.show()
 
 def timmer(method):
