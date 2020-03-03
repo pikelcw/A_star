@@ -1,3 +1,4 @@
+# A* Path Finding
 This program use A* algorithm to find a path between starting point and end point.
 
 You can add your own map to *data* folder.
