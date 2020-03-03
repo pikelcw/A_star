@@ -20,6 +20,7 @@ class Node():
 
     def __eq__(self,com):
         return np.array_equal(self.position, com.position)
+
     def __repr__(self):
         return f"Node at {self.position}, with g={self.g}, h={self.h}, f={self.f}."
 

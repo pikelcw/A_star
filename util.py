@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-
+import time
 def readInMaze(file):
     '''
        Read in map file
@@ -10,7 +10,6 @@ def readInMaze(file):
        3 : end point
     '''
     maze = np.loadtxt("data/"+file, delimiter=',', dtype = int)
-    # print(maze)
     start_pos = None
     end_pos = None
     for i,row in enumerate(maze):
@@ -32,7 +31,15 @@ def  updateMaze(maze,path):
         maze[y,x] = 9
 
 def plotMaze(maze):
-    print(type(maze))
     plt.imshow(maze)
     plt.show()
+
+def timmer(method):
+    def time_it(*args,**kargs):
+        start = time.time()
+        result = method(*args,**kargs)
+        dur = time.time()-start
+        print(f"It used {dur} sec.")
+        return result
+    return time_it
 
