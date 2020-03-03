@@ -26,7 +26,7 @@ def readInMaze(file):
 def printMaze(maze):
     print(maze)
 
-def  updateMaze(maze,path):
+def updateMaze(maze,path):
     for y,x in path[1:-1]:
         maze[y,x] = 9
 

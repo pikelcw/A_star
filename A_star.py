@@ -52,9 +52,9 @@ def astar(maze, start, end):
             # If child in open list and orignal g is smaller, explore next nighbor
             if open_list.checkInList(child):
                 continue
-           
+            
+            # Add child to open list
             open_list.append(child)
-        # time.sleep(5)
     return None
 
 if __name__ == "__main__":
@@ -63,13 +63,17 @@ if __name__ == "__main__":
     except:
         file_name = "map1.csv"
         print('No maze specified, use default sample maze.')
+
     maze, start_pos, end_pos= readInMaze(file_name)
     start = Node(start_pos)
     end = Node(end_pos)
     path = astar(maze,start,end)
+
     if path is None:
+        # If return path is None, no path find.
         print("Can not find a path!")
-        quit()
-    updateMaze(maze,path)
-    printMaze(maze)
-    plotMaze(maze)
+    else:
+        # Else, find a path, update maze and show.
+        updateMaze(maze,path)
+        printMaze(maze)
+        plotMaze(maze)
