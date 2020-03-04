@@ -6,7 +6,7 @@ This program use A* algorithm to find a path between starting point and end poin
 This project needs numpy and matplotlib.
 
 ### Creating your own maze
-You can add your own map to *data* folder.
+You can add your own map, in csv format, to *data* folder.
 - 1 for wall
 - 0 for walkable space
 - 2 for start point
