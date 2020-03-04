@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import time
+
 def readInMaze(file):
     '''
        Read in map file
@@ -23,6 +24,7 @@ def readInMaze(file):
     assert end_pos is not None, "No ending point"
 
     return maze,start_pos,end_pos
+
 def printMaze(maze):
     print(maze)
 
@@ -54,4 +56,28 @@ def timmer(method):
         print(f"It used {dur} sec.")
         return result
     return time_it
+
+def mazeToDistanceGrid(maze):
+    h,w = maze.shape
+    maxDis = np.max([h,w])
+    disMap = np.ones_like(maze)*maxDis
+    visited = []
+
+    
+    for x in range(w):
+        for y in range(h):
+            if(maze[y,x] == 1):
+                disMap[y,x]=0;
+                visited.append([x,y]);
+    
+    while(len(visited)!=0):
+        it = visited.pop(0)
+        for x in range(it[0]-1,it[0]+2):
+            for y in range(it[1]-1,it[1]+2):
+                if 0 <= x and x <= w-1 and 0 <= y and y <= h-1:
+                    if(disMap[y,x] - disMap[it[1],it[0]] > 1) and disMap[y,x] > disMap[it[1],it[0]]+1 :
+                        disMap[y,x] = min(disMap[y,x],disMap[it[1],it[0]] + 1)
+                        visited.append([x,y])
+
+    return disMap
 

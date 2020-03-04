@@ -2,13 +2,17 @@ import numpy as np
 import pandas as pd
 import sys
 import time
+import argparse
 from util import *
 from Node import Node
 from NodeList import NodeList
 
+
 @timmer
-def astar(maze, start, end):
+def astar(maze, start, end, keepDistance):
     h, w = maze.shape
+    disMap = mazeToDistanceGrid(maze)
+
     # Initialze open and closed list
     open_list = NodeList(sort=True)
     closed_list = NodeList()
@@ -48,6 +52,10 @@ def astar(maze, start, end):
             
             # Calculate cost
             child.updateCost(end)
+
+            # Keep path away from wall. Add cost according to how far away it is from wall.
+            if keepDistance:
+                child.updateDisCost(disMap[child_position[0],child_position[1]])
             
             # If child in open list and orignal g is smaller, explore next nighbor
             if open_list.checkInList(child):
@@ -58,16 +66,21 @@ def astar(maze, start, end):
     return None
 
 if __name__ == "__main__":
-    try:
-        file_name = sys.argv[1]
-    except:
-        file_name = "map1.csv"
-        print('No maze specified, use default sample maze.')
-
+    parser = argparse.ArgumentParser()
+    parser.add_argument('map',nargs='?',default='map1.csv',help='Map\'s Name')
+    parser.add_argument('--keepDistance','-kd',action='store_true',help='Keep distance from walls')
+    args = parser.parse_args()
+    print(args)
+    # try:
+        # file_name = sys.argv[1]
+    # except:
+        # file_name = "map1.csv"
+        # print('No maze specified, use default sample maze.')
+    file_name = args.map
     maze, start_pos, end_pos= readInMaze(file_name)
     start = Node(start_pos)
     end = Node(end_pos)
-    path = astar(maze,start,end)
+    path = astar(maze,start,end,args.keepDistance)
 
     if path is None:
         # If return path is None, no path find.
