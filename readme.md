@@ -14,6 +14,7 @@ You can add your own map, in csv format, to *data* folder.
 
 ### Solve the maze
 You can choose to keep the path away from wall by adding `--keepDistance` or `-kd` flag. 
+
 The `--verbose` or `-v` flag can animate the solving process in realtime.
 ```
 python3 A_star.py --keepDistance --verbose mapName.csv
