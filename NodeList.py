@@ -1,9 +1,11 @@
 from Node import Node
+from util import timmer
+
 class NodeList():
     def __init__(self,sort=False):
         self.node_list = []
         self.sort = sort
-
+    
     def append(self,node):
         self.node_list.append(node)
         if self.sort:
@@ -14,7 +16,7 @@ class NodeList():
 
     def __len__(self):
         return len(self.node_list)
-
+    
     def checkInList(self,node):
         if self.sort: 
             check = self.checkSort

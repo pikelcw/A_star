@@ -8,11 +8,14 @@ from Node import Node
 from NodeList import NodeList
 
 
-@timmer
-def astar(maze, start, end, keepDistance):
+def astar(maze, start, end, keepDistance, verbose):
     h, w = maze.shape
-    disMap = mazeToDistanceGrid(maze)
-
+    totalPix = np.sum(maze!=1)
+    if keepDistance:
+        disMap = mazeToDistanceGrid(maze)
+    if verbose:
+        maze_cp = maze.copy()
+        plotMaze(maze_cp)
     # Initialze open and closed list
     open_list = NodeList(sort=True)
     closed_list = NodeList()
@@ -21,8 +24,12 @@ def astar(maze, start, end, keepDistance):
     open_list.append(start)
 
     while(len(open_list) > 0 ):
+        if verbose:
+            plotMaze(maze_cp)
         current_node = open_list.pop(0)
         closed_list.append(current_node)
+        if verbose and current_node != start:
+            maze_cp[current_node.position[0],current_node.position[1]] = 4
         
         if current_node == end: # Find a path
             path = []
@@ -42,7 +49,7 @@ def astar(maze, start, end, keepDistance):
             # If is wall, explore next neighbor
             if maze[child_position[0],child_position[1]]== 1:
                 continue
-            
+
             # Create new child node
             child = Node(child_position, current_node)
             
@@ -63,30 +70,28 @@ def astar(maze, start, end, keepDistance):
             
             # Add child to open list
             open_list.append(child)
+            if verbose:
+                maze_cp[child.position[0],child.position[1]] = 5
+
     return None
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('map',nargs='?',default='map1.csv',help='Map\'s Name')
     parser.add_argument('--keepDistance','-kd',action='store_true',help='Keep distance from walls')
+    parser.add_argument('--verbose','-v',action='store_true',help='Verbose solving status')
     args = parser.parse_args()
-    print(args)
-    # try:
-        # file_name = sys.argv[1]
-    # except:
-        # file_name = "map1.csv"
-        # print('No maze specified, use default sample maze.')
     file_name = args.map
     maze, start_pos, end_pos= readInMaze(file_name)
     start = Node(start_pos)
     end = Node(end_pos)
-    path = astar(maze,start,end,args.keepDistance)
+    path = astar(maze,start,end,args.keepDistance,args.verbose)
 
     if path is None:
-        # If return path is None, no path find.
         print("Can not find a path!")
+        plotMaze(maze)
     else:
         # Else, find a path, update maze and show.
-        updateMaze(maze,path)
+        maze = updateMaze(maze,path)
         # printMaze(maze)
-        plotMaze(maze)
+        plotMaze(maze,hold = True)

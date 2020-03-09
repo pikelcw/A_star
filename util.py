@@ -2,6 +2,23 @@ import numpy as np
 import matplotlib.pyplot as plt
 import time
 
+colorCode = {0:np.array([1,1,1]),
+             1:np.array([0,0,0]),
+             2:np.array([1,0,0]),
+             3:np.array([0,1,0]),
+             4:np.array([1,1,0]),
+             5:np.array([0,1,1]),
+             9:np.array([0,0,1])}
+
+def timmer(method):
+    def time_it(*args,**kargs):
+        start = time.time()
+        result = method(*args,**kargs)
+        dur = time.time()-start
+        print(f"Method {method.__name__} used {dur} sec.")
+        return result
+    return time_it
+
 def readInMaze(file):
     '''
        Read in map file
@@ -31,31 +48,18 @@ def printMaze(maze):
 def updateMaze(maze,path):
     for y,x in path[1:-1]:
         maze[y,x] = 9
-
-def plotMaze(maze):
+    return maze
+@timmer 
+def plotMaze(maze,hold = False): 
     image = np.ones((maze.shape[0],maze.shape[1],3))
-    for j,row in enumerate(maze):
-        for i,element in enumerate(row):
-            if element == 1:
-                image[j,i,:] = np.array([0,0,0])
-            elif element == 2:
-                image[j,i,:] = np.array([1,0,0])
-            elif element == 3:
-                image[j,i,:] = np.array([0,1,0])
-            elif element == 9:
-                image[j,i,:] = np.array([0,0,1])
-
+    for color in colorCode:
+        image[maze==color] = colorCode[color]
+    
     plt.imshow(image)
-    plt.show()
-
-def timmer(method):
-    def time_it(*args,**kargs):
-        start = time.time()
-        result = method(*args,**kargs)
-        dur = time.time()-start
-        print(f"It used {dur} sec.")
-        return result
-    return time_it
+    plt.draw()
+    plt.pause(0.0005)
+    if hold:
+        input("Press [enter] to continue.")
 
 def mazeToDistanceGrid(maze):
     h,w = maze.shape

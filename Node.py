@@ -31,8 +31,8 @@ class Node():
         # f = g + h
         self.f = self.g + self.h
 
-    def updateDisCost(self,dis):
-        self.f += self.f/dis
+    def updateDisCost(self,dis,weight=10):
+        self.f += self.h/dis
 
     def __eq__(self,com):
         return np.array_equal(self.position, com.position)
