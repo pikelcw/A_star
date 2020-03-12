@@ -89,7 +89,7 @@ if __name__ == "__main__":
 
     if path is None:
         print("Can not find a path!")
-        plotMaze(maze)
+        plotMaze(maze,hold = True)
     else:
         # Else, find a path, update maze and show.
         maze = updateMaze(maze,path)
